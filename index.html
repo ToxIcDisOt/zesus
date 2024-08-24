@@ -191,13 +191,14 @@
       <h2>Contact</h2>
       <form id="contactForm">
         <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required />
+        <input type="text" id="name" name="name" placeholder="Your Full Name" required />
 
         <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required />
+        <input type="email" id="email" name="email" placeholder="you@example.com" required />
 
         <label for="message">Message:</label>
-        <textarea id="message" name="message" required></textarea>
+        <textarea id="message" name="message" placeholder="Your message here..." maxlength="500" required></textarea>
+        <div class="char-counter" id="charCounter">0/500</div>
 
         <button type="submit" class="cta-btn">Send Message</button>
       </form>
@@ -238,48 +239,47 @@
         serverTimestamp,
       } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 
-      // Your web app's Firebase configuration
-      const firebaseConfig = {
-        apiKey: "AIzaSyCEEiWfzIou4m_cWpHWvmVW_vqSWV5v970",
-        authDomain: "zesus-490d7.firebaseapp.com",
-        projectId: "zesus-490d7",
-        storageBucket: "zesus-490d7.appspot.com",
-        messagingSenderId: "501653916271",
-        appId: "1:501653916271:web:0011c49b09a0fb6cfa9b9a",
-        measurementId: "G-L46P0ZEN3P",
-      };
+      // Fetch Firebase config from a JSON file
+      fetch("./firebaseConfig.json")
+        .then((response) => response.json())
+        .then((config) => {
+          const app = initializeApp(config);
+          const analytics = getAnalytics(app);
+          const db = getFirestore(app);
 
-      // Initialize Firebase
-      const app = initializeApp(firebaseConfig);
-      const analytics = getAnalytics(app);
+          const contactForm = document.getElementById("contactForm");
+          const statusMessage = document.getElementById("statusMessage");
+          const messageInput = document.getElementById("message");
+          const charCounter = document.getElementById("charCounter");
 
-      // Initialize Firestore
-      const db = getFirestore(app);
-
-      const contactForm = document.getElementById("contactForm");
-      const statusMessage = document.getElementById("statusMessage");
-
-      contactForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const name = contactForm.name.value;
-        const email = contactForm.email.value;
-        const message = contactForm.message.value;
-
-        try {
-          await addDoc(collection(db, "contacts"), {
-            name: name,
-            email: email,
-            message: message,
-            timestamp: serverTimestamp(),
+          // Update the character counter as the user types
+          messageInput.addEventListener("input", () => {
+            charCounter.textContent = `${messageInput.value.length}/500`;
           });
-          statusMessage.textContent = "Message sent successfully!";
-          contactForm.reset();
-        } catch (error) {
-          console.error("Error writing document: ", error);
-          statusMessage.textContent =
-            "Failed to send the message. Please try again.";
-        }
-      });
+
+          contactForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const name = contactForm.name.value;
+            const email = contactForm.email.value;
+            const message = contactForm.message.value;
+
+            try {
+              await addDoc(collection(db, "contacts"), {
+                name: name,
+                email: email,
+                message: message,
+                timestamp: serverTimestamp(),
+              });
+              statusMessage.textContent = "Message sent successfully!";
+              contactForm.reset();
+              charCounter.textContent = "0/500"; // Reset counter after form submission
+            } catch (error) {
+              console.error("Error writing document: ", error);
+              statusMessage.textContent =
+                "Failed to send the message. Please try again.";
+            }
+          });
+        });
 
       // Hamburger Menu Toggle
       const hamburger = document.querySelector(".hamburger");

@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda+SC:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&display=swap');
 
-
 /* Loading Screen Styles */
 #loading-screen {
     position: fixed;
@@ -8,7 +7,6 @@
     height: 100%;
     background-color: #000000;
     z-index: 10000;
-    /* Ensure it appears on top */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -38,7 +36,6 @@
         transform: rotate(360deg);
     }
 }
-
 
 /* General Styles */
 body {
@@ -382,6 +379,18 @@ body {
     border-color: #A47CA4;
 }
 
+#contactForm textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+#contactForm .char-counter {
+    font-size: 12px;
+    text-align: right;
+    margin-bottom: 10px;
+    color: #666;
+}
+
 #contactForm button {
     padding: 0.75rem;
     background-color: #C8A2C8;
@@ -405,7 +414,6 @@ body {
     font-weight: bold;
     color: #C8A2C8;
 }
-
 
 /* Footer Styles */
 footer {
@@ -499,11 +507,8 @@ footer p a:hover {
     color: #FFFFFF;
     border: none;
     border-radius: 50%;
-    /* This makes the button round */
     width: 50px;
-    /* Adjust the width for a round shape */
     height: 50px;
-    /* Adjust the height for a round shape */
     font-size: 18px;
     cursor: pointer;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
